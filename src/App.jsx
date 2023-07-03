@@ -41,26 +41,26 @@ const TaskList = () => {
   const handleSelectChange = (e) => {
     setStatus(e.target.value);
   };
+
   const handleSearch = (e) => {
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
-  
+
     if (searchTerm.trim().length === 0) {
       // Campo de pesquisa vazio ou sem caracteres significativos, não é necessário fazer a chamada à API
       return;
     }
-  
+
     fetchTasksBySearchTerm(searchTerm);
   };
-  
-  
+
   const fetchTasksBySearchTerm = async (searchTerm) => {
     try {
-      const response = await fetch( // buscando tarefa 
+      const response = await fetch(
         `http://localhost:3000/task?search=${searchTerm}`
       );
       const data = await response.json();
-  
+
       if (Array.isArray(data) && data.length > 0) {
         setTasks(data);
       } else {
@@ -71,7 +71,6 @@ const TaskList = () => {
       console.log("Error fetching tasks by search term:", error);
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,7 +145,7 @@ const TaskList = () => {
     setEditTaskId(id);
   };
 
-  const handleDelete = async (id) => {//deletando tarefa
+  const handleDelete = async (id) => {
     try {
       await fetch(`http://localhost:3000/task/${id}`, {
         method: "DELETE",
@@ -172,7 +171,7 @@ const TaskList = () => {
     }
 
     return filteredTasks.map((task) => (
-      <div key={task.id} className="task-list">
+      <div key={task.id} className="task-card">
         {editTaskId === task.id ? (
           <div>
             <input
@@ -181,7 +180,13 @@ const TaskList = () => {
               onChange={(e) => setEditTitle(e.target.value)}
               placeholder="Insira o título"
             />
-            
+    
+            <input
+              value={editTask}
+              onChange={handleChange} // Atualizada a função de handleChange
+              placeholder="Insira a descrição"
+            />
+    
             <select value={status} onChange={handleSelectChange}>
               <option value="listadas">Listadas</option>
               <option value="iniciadas">Iniciadas</option>
@@ -192,7 +197,7 @@ const TaskList = () => {
         ) : (
           <div>
             <h4>{task.title}</h4>
-            <span>{task.task}</span>
+            <p>{task.task}</p>
             <div>
               <button
                 className="btn-editar"
@@ -201,7 +206,7 @@ const TaskList = () => {
                 Editar
               </button>
             </div>
-
+    
             <button
               className="btn-delete"
               onClick={() => handleDelete(task.id)}
@@ -246,16 +251,18 @@ const TaskList = () => {
       />
 
       <h2>Listadas</h2>
+      <p>titulo:</p>
       {renderTasks("listadas")}
 
       <h2>Iniciadas</h2>
+      <p>titulo:</p>
       {renderTasks("iniciadas")}
 
       <h2>Finalizadas</h2>
+      <p>titulo:</p>
       {renderTasks("finalizadas")}
     </div>
   );
 };
 
 export default TaskList;
-
