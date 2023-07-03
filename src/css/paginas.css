@@ -1,0 +1,40 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=League+Spartan&family=Roboto:ital,wght@0,500;0,700;1,400;1,500&display=swap');
+
+body{
+
+  font-family: 'Roboto';
+  background-color:wheat;
+}
+h1{
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+}
+.container{
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+button:hover{
+  background-color: blue;
+  cursor: pointer;
+}
+.btn-editar{
+  width: 100px;
+  border-radius: 8px solid black;
+  margin-bottom: 1%;
+
+}
+.btn-delete{
+  width: 100px;
+  border-radius: 8px solid black;
+  margin-bottom: 1%;
+}
+.task-list{
+ background-color: beige;
+border: 2px solid black;
+
+  
+}
