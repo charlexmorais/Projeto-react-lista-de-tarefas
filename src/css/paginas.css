@@ -37,13 +37,7 @@ border: 2px solid black;
 
   
 }
-.task-card {
 
-  background-color: #f5f5f5;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
 
 .task-card h4 {
   margin-top: 0;
@@ -87,8 +81,7 @@ border: 2px solid black;
     color: white;
   }
   
-  /* Alinhe o título da seção com as tarefas */
-  h2 {
-    margin-top: 20px;
+  strong{
+   color: blue;
   }
   
