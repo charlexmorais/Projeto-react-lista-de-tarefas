@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./css/paginas.css";
 
 const TaskList = () => {
+  const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [task, setTask] = useState("");
   const [status, setStatus] = useState("listadas");
-  const [tasks, setTasks] = useState([]);
-  const [editTaskId, setEditTaskId] = useState(null);
-  const [editTask, setEditTask] = useState(null);
-  const [editTitle, setEditTitle] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [editTaskId, setEditTaskId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editTask, setEditTask] = useState("");
 
   useEffect(() => {
     fetchTasks();
@@ -19,12 +19,7 @@ const TaskList = () => {
     try {
       const response = await fetch("http://localhost:3000/task");
       const data = await response.json();
-
-      if (Array.isArray(data)) {
-        setTasks(data);
-      } else {
-        console.log("Invalid data format:", data);
-      }
+      setTasks(data);
     } catch (error) {
       console.log("Error fetching tasks:", error);
     }
@@ -43,39 +38,19 @@ const TaskList = () => {
   };
 
   const handleSearch = (e) => {
-    const searchTerm = e.target.value;
-    setSearchTerm(searchTerm);
-
-    if (searchTerm.trim().length === 0) {
-      // Campo de pesquisa vazio ou sem caracteres significativos, não é necessário fazer a chamada à API
-      return;
-    }
-
-    fetchTasksBySearchTerm(searchTerm);
-  };
-
-  const fetchTasksBySearchTerm = async (searchTerm) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/task?search=${searchTerm}`
-      );
-      const data = await response.json();
-
-      if (Array.isArray(data) && data.length > 0) {
-        setTasks(data);
-      } else {
-        // Nenhuma tarefa encontrada
-        setTasks([]);
-      }
-    } catch (error) {
-      console.log("Error fetching tasks by search term:", error);
-    }
+    setSearchTerm(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (editTaskId !== null) {
-      // Atualizar tarefa existente em modo de edição
+      // Atualizar tarefa existente
+      if (editTitle.trim() === "" || editTask.trim() === "") {
+        console.log("Os campos não podem estar vazios.");
+        return;
+      }
+
       const updatedTask = {
         title: editTitle,
         task: editTask,
@@ -83,33 +58,38 @@ const TaskList = () => {
       };
 
       try {
-        await fetch(`http://localhost:3000/task/${editTaskId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedTask),
-        });
-
-        const updatedTasks = tasks.map((task) => {
-          if (task.id === editTaskId) {
-            return {
-              ...task,
-              ...updatedTask,
-            };
+        const response = await fetch(
+          `http://localhost:3000/task/${editTaskId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedTask),
           }
-          return task;
-        });
+        );
 
-        setTasks(updatedTasks);
-        setEditTaskId(null);
-        setEditTask(null);
-        setEditTitle(null);
+        if (response.ok) {
+          const updatedTasks = tasks.map((task) =>
+            task.id === editTaskId ? { ...task, ...updatedTask } : task
+          );
+          setTasks(updatedTasks);
+        }
       } catch (error) {
         console.log("Error updating task:", error);
       }
+
+      setEditTaskId(null);
+      setEditTitle("");
+      setEditTask("");
+      setStatus("listadas");
     } else {
       // Adicionar nova tarefa
+      if (title.trim() === "" || task.trim() === "") {
+        console.log("Os campos não podem estar vazios.");
+        return;
+      }
+
       const newTask = {
         title: title,
         task: task,
@@ -131,27 +111,29 @@ const TaskList = () => {
       } catch (error) {
         console.log("Error creating task:", error);
       }
-    }
 
-    setTitle("");
-    setTask("");
-    setStatus("listadas");
+      setTitle("");
+      setTask("");
+      setStatus("listadas");
+    }
   };
 
-  const handleEdit = (id) => {
-    const taskToEdit = tasks.find((task) => task.id === id);
+  const handleEdit = (taskId) => {
+    const taskToEdit = tasks.find((task) => task.id === taskId);
+
+    setEditTaskId(taskId);
     setEditTitle(taskToEdit.title);
     setEditTask(taskToEdit.task);
-    setEditTaskId(id);
+    setStatus(taskToEdit.status);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (taskId) => {
     try {
-      await fetch(`http://localhost:3000/task/${id}`, {
+      await fetch(`http://localhost:3000/task/${taskId}`, {
         method: "DELETE",
       });
 
-      const updatedTasks = tasks.filter((task) => task.id !== id);
+      const updatedTasks = tasks.filter((task) => task.id !== taskId);
       setTasks(updatedTasks);
     } catch (error) {
       console.log("Error deleting task:", error);
@@ -166,10 +148,6 @@ const TaskList = () => {
           task.task.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    if (filteredTasks.length === 0) {
-      return <p>Nenhuma tarefa cadastrada.</p>;
-    }
-
     return filteredTasks.map((task) => (
       <div key={task.id} className="task-card">
         {editTaskId === task.id ? (
@@ -180,13 +158,13 @@ const TaskList = () => {
               onChange={(e) => setEditTitle(e.target.value)}
               placeholder="Insira o título"
             />
-    
-            <input
+
+            <textarea
               value={editTask}
-              onChange={handleChange} // Atualizada a função de handleChange
+              onChange={(e) => setEditTask(e.target.value)}
               placeholder="Insira a descrição"
             />
-    
+
             <select value={status} onChange={handleSelectChange}>
               <option value="listadas">Listadas</option>
               <option value="iniciadas">Iniciadas</option>
@@ -196,21 +174,22 @@ const TaskList = () => {
           </div>
         ) : (
           <div>
-            <h4>{task.title}</h4>
-            <p>{task.task}</p>
             <div>
-              <button
-                className="btn-editar"
-                onClick={() => handleEdit(task.id)}
-              >
-                Editar
-              </button>
+              <strong>Título:</strong>
+              <p>{task.title}</p>
             </div>
-    
-            <button
-              className="btn-delete"
-              onClick={() => handleDelete(task.id)}
-            >
+            <div>
+              <strong>Descrição:</strong>
+              <p>{task.task}</p>
+            </div>
+            <div>
+              <strong>Status:</strong>
+              <p>{task.status}</p>
+            </div>
+            <button className="btn-editar" onClick={() => handleEdit(task.id)}>
+              Editar
+            </button>
+            <button className="btn-delete" onClick={() => handleDelete(task.id)}>
               Deletar
             </button>
           </div>
@@ -229,12 +208,13 @@ const TaskList = () => {
           onChange={handleTitleChange}
           placeholder="Insira o título"
         />
-        <input
-          type="text"
+
+        <textarea
           value={task}
           onChange={handleChange}
           placeholder="Insira a descrição"
         />
+
         <select value={status} onChange={handleSelectChange}>
           <option value="listadas">Listadas</option>
           <option value="iniciadas">Iniciadas</option>
@@ -250,16 +230,13 @@ const TaskList = () => {
         placeholder="Pesquisar"
       />
 
-      <h2>Listadas</h2>
-      <p>titulo:</p>
+      
       {renderTasks("listadas")}
 
-      <h2>Iniciadas</h2>
-      <p>titulo:</p>
+     
       {renderTasks("iniciadas")}
 
-      <h2>Finalizadas</h2>
-      <p>titulo:</p>
+      
       {renderTasks("finalizadas")}
     </div>
   );
