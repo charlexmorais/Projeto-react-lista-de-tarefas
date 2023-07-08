@@ -1,11 +1,11 @@
-import React, { useState} from "react";
-import './paginas.css';
+import React, { useState } from "react";
+import "./paginas.css";
 import { Link } from "react-router-dom";
 
 const CadastroPage = () => {
   const [title, setTitle] = useState("");
   const [task, setTask] = useState("");
-  const [status, setStatus] = useState("iniciada"); // Estado para armazenar o status da tarefa
+  const [status, setStatus] = useState("listadas"); // Estado para armazenar o status da tarefa
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -57,34 +57,38 @@ const CadastroPage = () => {
   };
 
   return (
-    <div>
-      <h2>Cadastro de Tarefa</h2>
-      <Link to="/" >
-        <button className="btn-cadastro">Menu</button>
+    <div className="menu-container">
+      <div className="background-image"></div>
+      <div className="content">
+        <h2>Cadastro de Tarefa</h2>
+        <Link to="/">
+          <button className="btn-cadastro">Menu</button>
         </Link>
-      <form className="container" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={title}
-          onChange={handleTitleChange}
-          placeholder="Insira o título"
-        />
+        <form className="container" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="Insira o título"
+          />
 
-        <textarea
-          value={task}
-          onChange={handleChange}
-          placeholder="Insira a descrição"
-        />
+          <textarea
+            value={task}
+            onChange={handleChange}
+            placeholder="Insira a descrição"
+          />
 
-        <select value={status} onChange={handleStatusChange}>
-          <option value="listadas">Iniciadas</option>
-          <option value="iniciadas">listadas</option>
-          <option value="finalizadas">Finalizadas</option>
-        </select>
+          <select value={status} onChange={handleStatusChange}>
+            <option value="listadas">listadas</option>
+            <option value="iniciadas">iniciadas</option>
+            <option value="finalizadas">Finalizadas</option>
+          </select>
 
-        <button className="btn-cadastro" type="submit">Adicionar</button>
-        
-      </form>
+          <button className="btn-cadastro" type="submit">
+            Adicionar
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

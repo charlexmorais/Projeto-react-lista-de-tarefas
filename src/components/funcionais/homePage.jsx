@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./paginas.css";
+import "./homePage.css";
 
 const HomePage = () => {
   const [tasks, setTasks] = useState([]);
@@ -34,15 +35,18 @@ const HomePage = () => {
   const handleKeyDown = async (event) => {
     if (event.key === "Enter") {
       event.preventDefault(); // Prevent form submission
-      const filtered = tasks.filter((task) =>
-        task.title.toLowerCase().includes(filter.toLowerCase())
-      );
-      setFilteredTasks(filtered);
+      handleSearch(tasks); // Pass the original tasks array
+    }
+  };
 
-      if (filtered.length > 0) {
-        const taskId = filtered[0].id;
-        await fetchTaskById(taskId);
-      }
+  const handleSearch = async (tasksToSearch) => {
+    const filtered = tasksToSearch.filter((task) =>
+      task.title.toLowerCase().includes(filter.toLowerCase())
+    );
+    setFilteredTasks(filtered);
+    if (filtered.length > 0) {
+      const taskId = filtered[0].id;
+      await fetchTaskById(taskId);
     }
   };
 
@@ -91,6 +95,9 @@ const HomePage = () => {
           onKeyDown={handleKeyDown}
           placeholder="Filtrar tarefas"
         />
+        <button className="btn-search" onClick={() => handleSearch(tasks)}>
+          Buscar
+        </button>
       </div>
       <Link to="/">
         <button className="btn-cadastro">Menu</button>
@@ -98,9 +105,11 @@ const HomePage = () => {
 
       {filteredTasks.map((task) => (
         <div key={task.id} className="task-card">
-          <h4>{task.title}</h4>
+          <h4>TÍTULO:</h4> <p>{task.title}</p>
+          <h4>DESCRIÇÃO:</h4>
           <p>{task.task}</p>
-          <p>Status: {task.status}</p>
+          <h4>STATUS: </h4>
+          <p>{task.status}</p>
           <div className="button-container">
             <Link to={`/tarefas/editar/${task.id}`}>
               <button className="btn-editar">Editar</button>
@@ -116,3 +125,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

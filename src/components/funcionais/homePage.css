@@ -1,0 +1,47 @@
+.task-card {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+  }
+  
+  .task-card h4 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .task-card p {
+    margin: 0 0 10px;
+    font-size: 16px;
+  }
+  
+  .task-card p.status {
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .task-card .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .btn-editar,
+  .btn-excluir {
+    background-color: #1abc9c;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-excluir {
+    background-color: #e74c3c;
+  }
+  
+  .btn-editar:hover,
+  .btn-excluir:hover {
+    opacity: 0.8;
+  }
+  

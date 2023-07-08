@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const EditarPage = () => {
   const { id } = useParams();
@@ -77,6 +77,15 @@ const EditarPage = () => {
   return (
     <div>
       <h2>Editar Tarefa</h2>
+      <Link to="/">
+        <button className="btn-cadastro">Menu</button>
+      </Link>
+      <div>
+        <Link to="/tarefas">
+          <button className="btn-cadastro">Tarefas cadastradas</button>
+        </Link>
+      </div>
+
       <form className="container" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -98,7 +107,9 @@ const EditarPage = () => {
           <option value="finalizadas">Finalizadas</option>
         </select>
 
-        <button type="submit">Atualizar</button>
+        <button className="btn-cadastro" type="submit">
+          Atualizar
+        </button>
       </form>
     </div>
   );
