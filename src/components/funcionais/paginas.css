@@ -1,29 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan&family=Roboto:ital,wght@0,500;0,700;1,400;1,500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan&family=Roboto:ital,wght@0,500;0,700;1,400;1,500&display=swap");
 
-body{
-
-  font-family: 'Roboto';
-  background-color:wheat;
+body {
+  font-family: "Roboto";
+  background-color: wheat;
 }
-h1{
+h1 {
   font-size: 18px;
   display: flex;
   justify-content: center;
 }
-.container{
+
+
+.container {
   display: flex;
   justify-content: center;
   margin-top: 5%;
 }
 
-
-.task-list{
- background-color: beige;
-border: 2px solid black;
-
-  
+.task-list {
+  background-color: beige;
+  border: 2px solid black;
 }
-
 
 .task-card h4 {
   margin-top: 0;
@@ -37,56 +34,80 @@ border: 2px solid black;
 .task-card button {
   margin-right: 40px;
   margin-left: 40px;
+  
 }
 /* Adicione estilos para os cards de tarefa */
 .task-card {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-  }
-  
-
-  
-  strong{
-   color: blue;
-  }
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
  
-   
+}
 
-  /* // botoes pagina home */
+strong {
+  color: blue;
+}
+.btn-cadastro{
+width: 100px;
+height: 50px;
 
-  .btn-editar {
-    width: 50px;
-    background-color: #4caf50;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    margin-right: 10px;
-  }
+
+}
+#tarefas-cadastradas{
+
+  margin-bottom: 10px;
+}
+.btn-cadastro:hover{
+background-color: blue;
+cursor: pointer;
+
+}
+button{
+  font-family: "Roboto";
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.filter-container{
+  float: right;
   
-  .btn-editar:hover {
-    background-color: #45a049;
-  }
+
+}
+@media screen and (min-width: 768px) {
   
-  .btn-excluir {
-    width: 50px;
-    
-    background-color: #f44336;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
+  .button-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
   }
-  
-  .btn-excluir:hover {
-    background-color: #d32f2f;
-  }
-  .btn-editar,
+}
+
+.btn-editar {
+  background-color: #1abc9c;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
 .btn-excluir {
-  width: 100%;
+  background-color: #e74c3c;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  .btn-editar,
+  .btn-excluir {
+    width: 150px;
+  }
 }

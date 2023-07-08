@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import './paginas.css';
+import { Link } from "react-router-dom";
 
 const CadastroPage = () => {
   const [title, setTitle] = useState("");
@@ -58,6 +59,9 @@ const CadastroPage = () => {
   return (
     <div>
       <h2>Cadastro de Tarefa</h2>
+      <Link to="/" >
+        <button className="btn-cadastro">Menu</button>
+        </Link>
       <form className="container" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -79,6 +83,7 @@ const CadastroPage = () => {
         </select>
 
         <button className="btn-cadastro" type="submit">Adicionar</button>
+        
       </form>
     </div>
   );

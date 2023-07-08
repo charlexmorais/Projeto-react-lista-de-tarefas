@@ -1,43 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=League+Spartan&family=Roboto:ital,wght@0,500;0,700;1,400;1,500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan&family=Roboto:ital,wght@0,500;0,700;1,400;1,500&display=swap");
 
-body{
-
-  font-family: 'Roboto';
-  background-color:wheat;
+body {
+  font-family: "Roboto";
+  background-color: wheat;
 }
-h1{
+h1 {
   font-size: 18px;
   display: flex;
   justify-content: center;
 }
-.container{
+.container {
   display: flex;
   justify-content: center;
   margin-top: 5%;
 }
 
-button:hover{
-  background-color: blue;
-  cursor: pointer;
-}
-.btn-editar{
-  width: 100px;
-  border-radius: 8px solid black;
-  margin-bottom: 1%;
 
+.task-list {
+  background-color: beige;
+  border: 2px solid black;
 }
-.btn-delete{
-  width: 100px;
-  border-radius: 8px solid black;
-  margin-bottom: 1%;
-}
-.task-list{
- background-color: beige;
-border: 2px solid black;
-
-  
-}
-
 
 .task-card h4 {
   margin-top: 0;
@@ -54,34 +36,39 @@ border: 2px solid black;
 }
 /* Adicione estilos para os cards de tarefa */
 .task-card {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-  }
-  
-  /* Adicione estilos para os botões de ação (Editar e Deletar) */
-  .btn-editar,
-  .btn-delete {
-    padding: 5px 10px;
-    margin-right: 5px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .btn-editar {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  .btn-delete {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  strong{
-   color: blue;
-  }
-  
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+}
+/* // button de cadastro */
+.btn-cadastro{
+background-color: blue;
+cursor: pointer;
+}
+
+/* Adicione estilos para os botões de ação (Editar e Deletar) */
+
+.btn-editar,
+.btn-delete {
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn-editar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+}
+
+strong {
+  color: blue;
+}
