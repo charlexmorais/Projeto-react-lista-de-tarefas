@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./homePage";
 import CadastroPage from "./cadastro.Page";
 import EditarPage from "./editarPage";
-import "./paginas.css";
+import "/src/css/paginas.css";
 import Menu from "./menu";
-const TaskList = () => {
+const TaskList = () => { // Lista de tarefas
   return (
     <Router>
       <div>
@@ -20,4 +20,4 @@ const TaskList = () => {
   );
 };
 
-export default TaskList;
+export default TaskList; 

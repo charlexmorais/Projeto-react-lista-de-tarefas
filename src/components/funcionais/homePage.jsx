@@ -1,86 +1,101 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./paginas.css";
-import "./homePage.css";
+import "/src/css/paginas.css";
+import "/src/css/homePage.css";
+
+
 
 const HomePage = () => {
-  const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("");
-  const [filteredTasks, setFilteredTasks] = useState([]);
+  // Estados
+  const [tasks, setTasks] = useState([]); // Lista de tarefas
+  const [filter, setFilter] = useState(""); // Valor do filtro de busca
+  const [filteredTasks, setFilteredTasks] = useState([]); // Lista de tarefas filtradas
+  const [errorMessage, setErrorMessage] = useState(""); // Mensagem de erro
 
   useEffect(() => {
-    fetchTasks();
+    fetchTasks(); // Buscar as tarefas ao carregar a página
   }, []);
 
+  // Função para buscar as tarefas
   const fetchTasks = async () => {
     try {
-      const response = await fetch("http://localhost:3000/task");
-      const data = await response.json();
+      const response = await fetch("http://localhost:3000/task"); // Faz a requisição para buscar as tarefas
+      const data = await response.json(); // Converte a resposta para JSON
 
       if (response.ok) {
-        setTasks(data);
-        setFilteredTasks(data);
+        setTasks(data); // Atualiza a lista de tarefas
+        setFilteredTasks(data); // Define as tarefas filtradas inicialmente como todas as tarefas
       } else {
-        console.log("Error fetching tasks:", data);
+        console.log("Erro ao buscar tarefas:", data); //  erro caso a busca falhe
       }
     } catch (error) {
-      console.log("Error fetching tasks:", error);
+      console.log("Erro ao buscar tarefas:", error); //  erro caso ocorra uma exceção
     }
   };
 
+  // Função para lidar com a alteração do filtro de busca
   const handleFilterChange = (event) => {
-    setFilter(event.target.value);
+    setFilter(event.target.value); // Atualiza o valor do filtro de busca
   };
 
+  // Função para lidar com a tecla Enter no campo de filtro de busca
   const handleKeyDown = async (event) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Prevent form submission
-      handleSearch(tasks); // Pass the original tasks array
+      event.preventDefault();
+      handleSearch(tasks); // Executa a busca ao pressionar Enter
     }
   };
 
+  // Função para realizar a busca das tarefas
   const handleSearch = async (tasksToSearch) => {
+    if (filter.trim() === "") {
+      setErrorMessage("Campo de filtro vazio."); // Define a mensagem de erro se o filtro estiver vazio
+      return;
+    }
+
+    setErrorMessage(""); // Limpa a mensagem de erro
     const filtered = tasksToSearch.filter((task) =>
       task.title.toLowerCase().includes(filter.toLowerCase())
-    );
-    setFilteredTasks(filtered);
+    ); // Filtra as tarefas com base no título, ignorando maiúsculas e minúsculas
+    setFilteredTasks(filtered); // Atualiza a lista de tarefas filtradas
     if (filtered.length > 0) {
       const taskId = filtered[0].id;
-      await fetchTaskById(taskId);
+      await fetchTaskById(taskId); // Busca detalhes da primeira tarefa filtrada
     }
   };
 
+  // Função para buscar detalhes de uma tarefa específica pelo ID
   const fetchTaskById = async (taskId) => {
     try {
       const response = await fetch(`http://localhost:3000/task/${taskId}`);
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Task fetched from API:", data);
+        console.log("Tarefa encontrada !:", data); // Log de sucesso ao encontrar a tarefa
       } else {
-        console.log("Error fetching task:", data);
+        console.log("Erro ao buscar tarefa:", data); // Log de erro caso a busca falhe
       }
     } catch (error) {
-      console.log("Error fetching task:", error);
+      console.log("Erro ao buscar tarefa::", error); // Log de erro caso ocorra uma exceção
     }
   };
 
+  // Função para deletar uma tarefa
   const deleteTask = async (taskId) => {
     try {
       const response = await fetch(`http://localhost:3000/task/${taskId}`, {
-        method: "DELETE",
+        method: "DELETE", // Método DELETE para remover a tarefa
       });
 
       if (response.ok) {
-        // Remove the deleted task from the tasks and filteredTasks state
         const updatedTasks = tasks.filter((task) => task.id !== taskId);
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks);
+        setTasks(updatedTasks); // Atualiza a lista de tarefas removendo a tarefa deletada
+        setFilteredTasks(updatedTasks); // Atualiza a lista de tarefas filtradas removendo a tarefa deletada
       } else {
-        console.log("Error deleting task");
+        console.log("Erro ao deletar tarefa:"); // Log de erro caso a remoção falhe
       }
     } catch (error) {
-      console.log("Error deleting task:", error);
+      console.log("Erro ao deletar tarefa:", error); // Log de erro caso ocorra uma exceção
     }
   };
 
@@ -99,6 +114,7 @@ const HomePage = () => {
           Buscar
         </button>
       </div>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <Link to="/">
         <button className="btn-cadastro">Menu</button>
       </Link>
@@ -125,4 +141,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

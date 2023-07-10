@@ -11,51 +11,53 @@ const EditarPage = () => {
     fetchTask();
   }, []);
 
-  const fetchTask = async () => {
+  const fetchTask = async () => {  
+    // Função para buscar a tarefa a ser editada
     try {
       const response = await fetch(`http://localhost:3000/task/${id}`);
       const data = await response.json();
 
       if (response.ok) {
-        setTitle(data.title);
-        setTask(data.task);
-        setStatus(data.status); // Definir o status da tarefa no estado
+        setTitle(data.title); // Define o título da tarefa
+        setTask(data.task); // Define a descrição da tarefa
+        setStatus(data.status); // Define o status da tarefa
       } else {
-        console.log("Error fetching task:", data);
+        console.log("Error ao buscar tarefa:", data); // erro caso a busca falhe
       }
     } catch (error) {
-      console.log("Error fetching task:", error);
+      console.log("Erro ao buscar tarefa", error); // erro caso a busca falhe
     }
   };
 
   const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+    setTitle(e.target.value); // Atualiza o estado do título com o valor do campo de título
   };
 
   const handleChange = (e) => {
-    setTask(e.target.value);
+    setTask(e.target.value); // Atualiza o estado da descrição com o valor do campo de descrição
   };
 
   const handleStatusChange = (e) => {
-    setStatus(e.target.value);
+    setStatus(e.target.value); // Atualiza o estado do status com o valor do campo de status
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (title.trim() === "" || task.trim() === "" || status === "") {
-      console.log("Os campos não podem estar vazios.");
+      console.log("Os campos não podem estar vazios."); // Validação dos campos
       return;
     }
 
     const updatedTask = {
       title: title,
       task: task,
-      status: status, // Inclua o status na tarefa atualizada
+      status: status, 
     };
 
     try {
       const response = await fetch(`http://localhost:3000/task/${id}`, {
+        // Envio da requisição PUT para atualizar a tarefa
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -64,13 +66,12 @@ const EditarPage = () => {
       });
 
       if (response.ok) {
-        // Redirecionar para a página inicial após a atualização
-        window.location.href = "/tarefas";
+        window.location.href = "/tarefas"; // Redireciona para a página de tarefas após a atualização
       } else {
-        console.log("Error updating task:", response);
+        console.log("Error ao buscar tarefa:", response); // erro caso a atualização falhe
       }
     } catch (error) {
-      console.log("Error updating task:", error);
+      console.log("Error ao buscar tarefa", error); // erro caso ocorra uma exceção
     }
   };
 

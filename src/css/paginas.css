@@ -3,6 +3,7 @@
 body {
   font-family: "Roboto";
   background-color: wheat;
+  margin: 2px;
 }
 .menu-container {
   position: relative;
