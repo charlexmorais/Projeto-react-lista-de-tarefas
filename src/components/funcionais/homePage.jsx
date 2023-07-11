@@ -3,99 +3,119 @@ import { Link } from "react-router-dom";
 import "/src/css/paginas.css";
 import "/src/css/homePage.css";
 
-
-
 const HomePage = () => {
-  // Estados
-  const [tasks, setTasks] = useState([]); // Lista de tarefas
-  const [filter, setFilter] = useState(""); // Valor do filtro de busca
-  const [filteredTasks, setFilteredTasks] = useState([]); // Lista de tarefas filtradas
-  const [errorMessage, setErrorMessage] = useState(""); // Mensagem de erro
+  const [tasks, setTasks] = useState([]); // Armazena todas as tarefas
+  const [filter, setFilter] = useState(""); // Armazena o valor do campo de filtro
+  const [filteredTasks, setFilteredTasks] = useState([]); // Armazena as tarefas filtradas
+  const [errorMessage, setErrorMessage] = useState(""); // Armazena a mensagem de erro
+  const [successMessage, setSuccessMessage] = useState(""); // Armazena a mensagem de sucesso
 
   useEffect(() => {
-    fetchTasks(); // Buscar as tarefas ao carregar a página
+    fetchTasks();
   }, []);
 
-  // Função para buscar as tarefas
+  // Função assíncrona para buscar as tarefas iniciais
   const fetchTasks = async () => {
     try {
-      const response = await fetch("http://localhost:3000/task"); // Faz a requisição para buscar as tarefas
-      const data = await response.json(); // Converte a resposta para JSON
+      const response = await fetch("http://localhost:3000/task");
+      const data = await response.json();
 
       if (response.ok) {
-        setTasks(data); // Atualiza a lista de tarefas
-        setFilteredTasks(data); // Define as tarefas filtradas inicialmente como todas as tarefas
+        setTasks(data);
+        setFilteredTasks(data);
       } else {
-        console.log("Erro ao buscar tarefas:", data); //  erro caso a busca falhe
+        console.log("Erro ao buscar tarefas:", data);
       }
     } catch (error) {
-      console.log("Erro ao buscar tarefas:", error); //  erro caso ocorra uma exceção
+      console.log("Erro ao buscar tarefas:", error);
     }
   };
 
-  // Função para lidar com a alteração do filtro de busca
+  // Atualiza o valor do filtro conforme o usuário digita
   const handleFilterChange = (event) => {
-    setFilter(event.target.value); // Atualiza o valor do filtro de busca
+    setFilter(event.target.value);
   };
 
-  // Função para lidar com a tecla Enter no campo de filtro de busca
+  // Função para lidar com a tecla Enter pressionada no campo de filtro
   const handleKeyDown = async (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleSearch(tasks); // Executa a busca ao pressionar Enter
+      handleSearch(tasks);
     }
   };
 
-  // Função para realizar a busca das tarefas
+  // Função para realizar a busca com base no filtro digitado
   const handleSearch = async (tasksToSearch) => {
     if (filter.trim() === "") {
-      setErrorMessage("Campo de filtro vazio."); // Define a mensagem de erro se o filtro estiver vazio
+      setErrorMessage("Campo de filtro vazio.");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
       return;
     }
 
-    setErrorMessage(""); // Limpa a mensagem de erro
+    setErrorMessage("");
     const filtered = tasksToSearch.filter((task) =>
       task.title.toLowerCase().includes(filter.toLowerCase())
-    ); // Filtra as tarefas com base no título, ignorando maiúsculas e minúsculas
-    setFilteredTasks(filtered); // Atualiza a lista de tarefas filtradas
+    );
+    setFilteredTasks(filtered);
     if (filtered.length > 0) {
       const taskId = filtered[0].id;
-      await fetchTaskById(taskId); // Busca detalhes da primeira tarefa filtrada
+      await fetchTaskById(taskId);
+    } else {
+      setErrorMessage("Nenhuma tarefa encontrada.");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
     }
   };
 
-  // Função para buscar detalhes de uma tarefa específica pelo ID
+  // Função para buscar uma tarefa específica pelo ID
   const fetchTaskById = async (taskId) => {
     try {
       const response = await fetch(`http://localhost:3000/task/${taskId}`);
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Tarefa encontrada !:", data); // Log de sucesso ao encontrar a tarefa
+        console.log("Tarefa encontrada:", data);
+        setSuccessMessage("Tarefa encontrada com sucesso.");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 3000);
       } else {
-        console.log("Erro ao buscar tarefa:", data); // Log de erro caso a busca falhe
+        console.log("Erro ao buscar tarefa:", data);
       }
     } catch (error) {
-      console.log("Erro ao buscar tarefa::", error); // Log de erro caso ocorra uma exceção
+      console.log("Erro ao buscar tarefa:", error);
     }
   };
 
-  // Função para deletar uma tarefa
+  // Função para excluir uma tarefa pelo ID
   const deleteTask = async (taskId) => {
     try {
       const response = await fetch(`http://localhost:3000/task/${taskId}`, {
-        method: "DELETE", // Método DELETE para remover a tarefa
+        method: "DELETE",
       });
 
       if (response.ok) {
         const updatedTasks = tasks.filter((task) => task.id !== taskId);
-        setTasks(updatedTasks); // Atualiza a lista de tarefas removendo a tarefa deletada
-        setFilteredTasks(updatedTasks); // Atualiza a lista de tarefas filtradas removendo a tarefa deletada
+        setTasks(updatedTasks);
+        setFilteredTasks(updatedTasks);
+        setSuccessMessage("Tarefa excluída com sucesso.");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 3000);
       } else {
-        console.log("Erro ao deletar tarefa:"); // Log de erro caso a remoção falhe
+        setErrorMessage("Erro ao deletar tarefa.");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000);
       }
     } catch (error) {
-      console.log("Erro ao deletar tarefa:", error); // Log de erro caso ocorra uma exceção
+      setErrorMessage("Erro ao deletar tarefa:", error);
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
     }
   };
 
@@ -115,6 +135,7 @@ const HomePage = () => {
         </button>
       </div>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
       <Link to="/">
         <button className="btn-cadastro">Menu</button>
       </Link>
@@ -130,7 +151,10 @@ const HomePage = () => {
             <Link to={`/tarefas/editar/${task.id}`}>
               <button className="btn-editar">Editar</button>
             </Link>
-            <button className="btn-excluir" onClick={() => deleteTask(task.id)}>
+            <button
+              className="btn-excluir"
+              onClick={() => deleteTask(task.id)}
+            >
               Excluir
             </button>
           </div>

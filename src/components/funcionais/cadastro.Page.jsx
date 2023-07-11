@@ -1,13 +1,21 @@
-import React, { useState } from "react";
-import "/src/css/paginas.css";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const CadastroPage = () => {
-  // Definição dos estados utilizando o useState
-  const [title, setTitle] = useState(""); // Estado para armazenar o título da tarefa
-  const [task, setTask] = useState(""); // Estado para armazenar a descrição da tarefa
-  const [status, setStatus] = useState("listadas"); // Estado para armazenar o status da tarefa
-  const [error, setError] = useState(""); // Estado para armazenar a mensagem de erro
+  const navigate = useNavigate();
+
+  // Estados para armazenar os valores dos campos
+  const [title, setTitle] = useState("");
+  const [task, setTask] = useState("");
+  const [status, setStatus] = useState("listadas");
+
+  // Estados para armazenar as mensagens de erro e sucesso
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Estados para controlar a exibição das mensagens de erro e sucesso
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   // Função para lidar com a alteração do título da tarefa
   const handleTitleChange = (e) => {
@@ -24,17 +32,33 @@ const CadastroPage = () => {
     setStatus(e.target.value);
   };
 
+  // Função para exibir a mensagem de sucesso
+  const showSuccess = () => {
+    setSuccessMessage("Tarefa criada com sucesso.");
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000); // Define o tempo de exibição da mensagem (3 segundos)
+  };
+
+  // Função para exibir a mensagem de erro
+  const showError = () => {
+    setErrorMessage("Erro ao criar tarefa.");
+    setShowErrorMessage(true);
+    setTimeout(() => {
+      setShowErrorMessage(false);
+    }, 3000); // Define o tempo de exibição da mensagem (3 segundos)
+  };
+
   // Função para lidar com o envio do formulário de cadastro
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validação dos campos de título e descrição
-    if (title.trim() === "" || task.trim() === "") {
-      setError("Os campos não podem estar vazios.");
-      return;
+    if (!title.trim() || !task.trim()) {
+      showError();
+      throw new Error("Os campos não podem estar vazios.");
     }
 
-    // Criação de um novo objeto de tarefa
     const newTask = {
       title: title,
       task: task,
@@ -42,7 +66,6 @@ const CadastroPage = () => {
     };
 
     try {
-      // Envio da requisição POST para criar a nova tarefa
       const response = await fetch("http://localhost:3000/task", {
         method: "POST",
         headers: {
@@ -51,19 +74,27 @@ const CadastroPage = () => {
         body: JSON.stringify(newTask),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redireciona para a página de cadastro de tarefas após o sucesso
-        window.location.href = "/tarefas/cadastro";
+      if (response.status === 201) {
+        showSuccess();
+        setTitle("");
+        setTask("");
+        setStatus("listadas");
+        navigate("/tarefas/cadastro");
       } else {
-        setError("Erro ao criar tarefa."); // Define a mensagem de erro
-        console.log(setError);
+        showError();
+        throw new Error("Erro ao criar tarefa.");
       }
     } catch (error) {
-      setError("Erro ao criar tarefa."); // Define a mensagem de erro
+      setErrorMessage("Erro ao criar tarefa: " + error.message);
+      setSuccessMessage("");
+      throw error;
     }
   };
+
+  // Efeito para exibir o erro no console
+  useEffect(() => {
+    console.log("Erro capturado:", errorMessage);
+  }, [errorMessage]);
 
   return (
     <div className="menu-container">
@@ -74,7 +105,12 @@ const CadastroPage = () => {
           <button className="btn-cadastro">Menu</button>
         </Link>
         <form className="container" onSubmit={handleSubmit}>
-          {error && <p className="error-message">{error}</p>}
+          {showErrorMessage && (
+            <p className="error-message">{errorMessage}</p>
+          )}
+          {showSuccessMessage && (
+            <p className="success-message">{successMessage}</p>
+          )}
 
           <input
             type="text"
@@ -105,4 +141,3 @@ const CadastroPage = () => {
 };
 
 export default CadastroPage;
-
