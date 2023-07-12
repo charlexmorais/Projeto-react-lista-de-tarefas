@@ -104,6 +104,11 @@ const CadastroPage = () => {
         <Link to="/">
           <button className="btn-cadastro">Menu</button>
         </Link>
+        <div>
+        <Link to="/tarefas">
+          <button className="btn-cadastro">Tarefas cadastradas</button>
+        </Link>
+      </div>
         <form className="container" onSubmit={handleSubmit}>
           {showErrorMessage && (
             <p className="error-message">{errorMessage}</p>
